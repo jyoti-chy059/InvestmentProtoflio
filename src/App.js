@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import './App.css'
+
+import DoughnutChart from './Component/DoughnutChart'
+import BarChart from './Component/BarChart'
+import InvestmentForm from './Component/form'
 
 function App() {
+  const [amount, setAmount] = useState([])
+  const [profitLossData, setProfitlossData] = useState([])
+
+  const handleSubmit = formValues => {
+    setAmount([...amount, { y: formValues.amountInvested, label: formValues.fundName }])
+    setProfitlossData([
+      ...profitLossData,
+      { y: formValues.currentvalue - formValues.amountInvested, label: formValues.fundName },
+    ])
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <InvestmentForm onSubmit={handleSubmit} />
+        {/* {amount.length > 0 && ( */}
+        <div className={amount.length > 0 ? 'graph-show' : 'graph-hidden'}>
+          <DoughnutChart dataPoints={amount} />
+          <BarChart dataPoints={profitLossData} />
+        </div>
+        {/* )} */}
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
